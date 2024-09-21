@@ -41,6 +41,7 @@ test_bash: &test_bash
         - run:
             name: Check reactor and project
             command: which reactor && echo "$PROJECT_TEMPLATE_DIRECTORY"
+            environment: *session_env
         # - run:
         #     <<: *bootstrap
         #     shell: /usr/bin/bash
