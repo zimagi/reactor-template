@@ -10,6 +10,12 @@ ubuntu_arm64: &ubuntu_arm64
     machine:
         image: ubuntu-2404:current
 
+install_reactor: &install_reactor
+    name: Install reactor framework
+    command: |
+        git clone https://github.com/zimagi/reactor.git /tmp/reactor
+        echo 'export PATH=/tmp/reactor/scripts:${PATH}' >> $BASH_ENV
+
 bootstrap: &bootstrap
     name: Bootstrap test OS
     command: ./tests/bootstrap.sh
@@ -32,25 +38,16 @@ dump_log: &dump_log
 test_bash: &test_bash
     steps:
         - checkout
+        - run: *install_reactor
         - run:
-            name: Install reactor framework
-            command: git clone https://github.com/zimagi/reactor.git /tmp/reactor
-        - run:
-            name: Add reactor to execution path
-            command: echo 'export PATH=/tmp/reactor/scripts:${PATH}' >> $BASH_ENV
-        - run:
-            name: Check reactor and project
-            command: which reactor && echo "$PROJECT_TEMPLATE_DIRECTORY"
+            <<: *bootstrap
+            shell: /usr/bin/bash
             environment: *session_env
-        # - run:
-        #     <<: *bootstrap
-        #     shell: /usr/bin/bash
-        #     environment: *session_env
-        # - run:
-        #     <<: *session
-        #     shell: /usr/bin/bash
-        #     environment: *session_env
-        # - run: *dump_log
+        - run:
+            <<: *session
+            shell: /usr/bin/bash
+            environment: *session_env
+        - run: *dump_log
 
 jobs:
     test-amd64-ubuntu-bash:
