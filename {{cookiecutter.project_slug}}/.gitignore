@@ -1,0 +1,33 @@
+# Mac files
+.DS_Store
+
+# Eclipse project files
+/.project
+/.pydevproject
+/.buildpath
+/.settings
+
+# VSCode files
+/.vscode
+*.code-workspace
+
+# Minikube related
+/.minikube/
+
+# Terraform files
+/.terraform/
+/terraform/argocd-apps/
+
+# Project files
+/env/*/.kubeconfig
+/env/*/secret.sh
+/certs/
+/extensions/
+/docker/
+/charts/
+/logs/
+/cache/
+
+# Extra files
+/tmp/
+*.log

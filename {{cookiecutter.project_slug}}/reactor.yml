@@ -1,0 +1,32 @@
+name: "{{cookiecutter.project_name}}"
+short_name: "{{cookiecutter.project_slug}}"
+#
+# Docker image projects (map of images)
+#
+# {image_name}:
+#   remote: (https://|git@)example.com(/|:)project.git
+#   reference: (branch|tag)
+#   docker_dir: relative_path/to/dockerfile
+#   docker_tag: docker_build_tag
+#
+docker: {}
+#
+# Helm chart projects (map of charts)
+#
+# {chart_name}:
+#   remote: (https://|git@)example.com(/|:)project.git
+#   reference: (branch|tag)
+#   chart_dir: relative_path/to/chart
+#
+charts: {}
+#
+# Reactor extension projects (map of extensions)
+#
+# ** Add reactor commands and utilities
+# ** Should contain a 'reactor' top level directory
+#
+# {extension_name}:
+#   remote: (https://|git@)example.com(/|:)project.git
+#   reference: (branch|tag)
+#
+extensions: {}
