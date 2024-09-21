@@ -18,11 +18,11 @@ install_reactor: &install_reactor
 
 bootstrap: &bootstrap
     name: Bootstrap test OS
-    command: ./tests/bootstrap.sh
+    command: /tmp/reactor/tests/bootstrap.sh
 
 session: &session
     name: Test Docker image
-    command: ./tests/run_session.sh
+    command: /tmp/reactor/tests/run_session.sh
 
 session_env: &session_env
     REACTOR_PARENT_IMAGE: ubuntu:22.04
@@ -33,7 +33,7 @@ session_env: &session_env
 dump_log: &dump_log
     name: Dump reactor command log
     when: always
-    command: test ! -f ./tests/project/logs/reactor.log || cat ./tests/project/logs/reactor.log
+    command: test ! -f /tmp/reactor/tests/project/logs/reactor.log || cat /tmp/reactor/tests/project/logs/reactor.log
 
 test_bash: &test_bash
     steps:
