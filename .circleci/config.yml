@@ -15,7 +15,6 @@ install_reactor: &install_reactor
     command: |
         git clone https://github.com/zimagi/reactor.git /tmp/reactor
         echo 'export PATH=/tmp/reactor/scripts:${PATH}' >> $BASH_ENV
-        which reactor && ls -al ./
 
 bootstrap: &bootstrap
     name: Bootstrap test OS
@@ -40,6 +39,7 @@ test_bash: &test_bash
     steps:
         - checkout
         - run: *install_reactor
+        - run: which reactor && ls -al ./
         - run:
             <<: *bootstrap
             shell: /usr/bin/bash
