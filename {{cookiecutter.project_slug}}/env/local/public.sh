@@ -10,4 +10,4 @@ export ARGOCD_PROJECT_SEQUENCE='[
 #
 # Cluster environment configurations
 #
-export GATEWAY_NODE_PORT=32210
+export GATEWAY_NODE_PORT="{{cookiecutter.ingress_node_port}}"
