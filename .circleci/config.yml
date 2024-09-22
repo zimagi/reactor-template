@@ -39,7 +39,6 @@ test_bash: &test_bash
     steps:
         - checkout
         - run: *install_reactor
-        - run: which reactor && ls -al ./
         - run:
             <<: *bootstrap
             shell: /usr/bin/bash
