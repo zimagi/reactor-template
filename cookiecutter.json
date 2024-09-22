@@ -5,5 +5,12 @@
     "Apache Software License 2.0",
     "Not open source"
   ],
-  "ingress_node_port": "32210"
+  "ingress_node_port": "32210",
+  "_copy_without_render": [
+    "argocd",
+    "projects",
+    "reactor",
+    "LICENSE",
+    ".gitignore"
+  ]
 }
