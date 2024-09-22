@@ -8,6 +8,8 @@ NOTE:
 
 """
 import os
+import random
+import string
 
 
 TERMINATOR = "\x1b[0m"
@@ -17,14 +19,65 @@ HINT = "\x1b[3;33m"
 SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 
+def generate_random_string(length, using_digits=False, using_ascii_letters=False, using_punctuation=False):
+  symbols = []
+
+  if using_digits:
+    symbols += string.digits
+  if using_ascii_letters:
+    symbols += string.ascii_letters
+  if using_punctuation:
+    all_punctuation = set(string.punctuation)
+    unsuitable = {"'", '"', "\\", "$"}
+    suitable = all_punctuation.difference(unsuitable)
+    symbols += "".join(suitable)
+
+  return "".join([random.choice(symbols) for _ in range(length)])
+
+
 def remove_open_source_files():
   file_names = ["LICENSE"]
   for file_name in file_names:
     os.remove(file_name)
 
+def save_secret_environment():
+  secret_template_file = os.path.join('env', 'secret.sh')
+  secret_env_file = os.path.join('env', 'local', 'secret.sh')
+  secret_script = ""
+
+  with open(secret_template_file, "r+") as file:
+    secret_script = file.read()
+    os.remove(secret_template_file)
+
+  with open(secret_env_file, "w+") as file:
+    file.writelines(secret_script.format(
+      secret_key=generate_random_string(10,
+        using_ascii_letters=True,
+        using_digits=False,
+        using_punctuation=False
+      ),
+      long_secret_key=generate_random_string(20,
+        using_ascii_letters=True,
+        using_digits=False,
+        using_punctuation=False
+      ),
+      password=generate_random_string(10,
+        using_ascii_letters=True,
+        using_digits=True,
+        using_punctuation=False
+      ),
+      strong_password=generate_random_string(15,
+        using_ascii_letters=True,
+        using_digits=True,
+        using_punctuation=True
+      )
+    ))
+
 
 def main():
-  if "{{ cookiecutter.open_source_license }}" == "Not open source":
+  save_secret_environment()
+
+  if "{{ cookiecutter.open_source_license }}" == "none":
     remove_open_source_files()
 
   print(SUCCESS + "Project initialized." + TERMINATOR)
