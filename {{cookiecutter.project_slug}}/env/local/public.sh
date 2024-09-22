@@ -11,3 +11,7 @@ export ARGOCD_PROJECT_SEQUENCE='[
 # Cluster environment configurations
 #
 export GATEWAY_NODE_PORT="{{cookiecutter.ingress_node_port}}"
+#
+# Zimagi environment configurations
+#
+export ZIMAGI_GITHUB_ORG="zimagi"
