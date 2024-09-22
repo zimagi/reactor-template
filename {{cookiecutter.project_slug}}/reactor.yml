@@ -10,24 +10,25 @@ short_name: "{{cookiecutter.project_slug}}"
 #   docker_tag: docker_build_tag
 #
 docker:
-    zimagi:
-        remote: https://github.com/zimagi/zimagi.git
-        reference: reactor
-        docker_dir: docker
-        docker_tag: dev
+  zimagi:
+    remote: https://github.com/zimagi/zimagi.git
+    reference: reactor
+    docker_dir: docker
+    docker_tag: dev
 #
 # Helm chart projects (map of charts)
 #
 # {chart_name}:
+#   app: argocd_app_name (name field in info.yml)
 #   remote: (https://|git@)example.com(/|:)project.git
 #   reference: (branch|tag)
 #   chart_dir: relative_path/to/chart
 #
 charts:
-    zimagi:
-       remote: https://github.com/zimagi/charts.git
-       reference: main
-       chart_dir: charts/zimagi
+  zimagi:
+    remote: https://github.com/zimagi/charts.git
+    reference: main
+    chart_dir: charts/zimagi
 #
 # Reactor extension projects (map of extensions)
 #
