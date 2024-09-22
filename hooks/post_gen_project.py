@@ -65,7 +65,7 @@ def save_secret_environment():
         using_ascii_letters=True,
         using_digits=True,
         using_punctuation=False
-      )
+      ),
       strong_password=generate_random_string(15,
         using_ascii_letters=True,
         using_digits=True,
