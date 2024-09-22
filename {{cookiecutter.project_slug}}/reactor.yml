@@ -9,7 +9,12 @@ short_name: "{{cookiecutter.project_slug}}"
 #   docker_dir: relative_path/to/dockerfile
 #   docker_tag: docker_build_tag
 #
-docker: {}
+docker:
+    zimagi:
+        remote: https://github.com/zimagi/zimagi.git
+        reference: reactor
+        docker_dir: docker
+        docker_tag: dev
 #
 # Helm chart projects (map of charts)
 #
@@ -18,7 +23,11 @@ docker: {}
 #   reference: (branch|tag)
 #   chart_dir: relative_path/to/chart
 #
-charts: {}
+charts:
+    zimagi:
+       remote: https://github.com/zimagi/charts.git
+       reference: main
+       chart_dir: charts/zimagi
 #
 # Reactor extension projects (map of extensions)
 #
