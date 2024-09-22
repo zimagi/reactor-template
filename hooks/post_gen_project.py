@@ -19,18 +19,13 @@ HINT = "\x1b[3;33m"
 SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 
-def generate_random_string(length, using_digits=False, using_ascii_letters=False, using_punctuation=False):
+def generate_random_string(length, using_digits=True, using_ascii_letters=True):
   symbols = []
 
   if using_digits:
     symbols += string.digits
   if using_ascii_letters:
     symbols += string.ascii_letters
-  if using_punctuation:
-    all_punctuation = set(string.punctuation)
-    unsuitable = {"'", '"', "\\", "$"}
-    suitable = all_punctuation.difference(unsuitable)
-    symbols += "".join(suitable)
 
   return "".join([random.choice(symbols) for _ in range(length)])
 
@@ -53,23 +48,19 @@ def save_secret_environment():
     file.writelines(secret_script.format(
       secret_key=generate_random_string(10,
         using_ascii_letters=True,
-        using_digits=False,
-        using_punctuation=False
+        using_digits=False
       ),
       long_secret_key=generate_random_string(20,
         using_ascii_letters=True,
-        using_digits=False,
-        using_punctuation=False
+        using_digits=False
       ),
       password=generate_random_string(10,
         using_ascii_letters=True,
-        using_digits=True,
-        using_punctuation=False
+        using_digits=True
       ),
       strong_password=generate_random_string(15,
         using_ascii_letters=True,
-        using_digits=True,
-        using_punctuation=True
+        using_digits=True
       )
     ))
 
