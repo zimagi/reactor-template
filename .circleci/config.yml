@@ -33,7 +33,7 @@ session_env: &session_env
 dump_log: &dump_log
     name: Dump reactor command log
     when: always
-    command: test ! -f /tmp/reactor/tests/project/logs/reactor.log || cat /tmp/reactor/tests/project/logs/reactor.log
+    command: test ! -f ./logs/reactor.log || cat ./logs/reactor.log
 
 test_bash: &test_bash
     steps:
