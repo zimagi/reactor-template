@@ -19,6 +19,7 @@
 /terraform/argocd-apps/
 
 # Project files
+/env/*/.initialized
 /env/*/.kubeconfig
 /env/*/secret.sh
 /certs/
