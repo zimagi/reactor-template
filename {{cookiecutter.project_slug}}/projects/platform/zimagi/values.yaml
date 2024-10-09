@@ -1,10 +1,24 @@
 postgresql:
   primary:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1024Mi
     persistence:
       existingClaim: postgresql
 
 redis:
   master:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1024Mi
     persistence:
       existingClaim: redis
 

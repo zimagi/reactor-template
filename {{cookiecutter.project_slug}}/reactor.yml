@@ -4,6 +4,7 @@ short_name: "{{cookiecutter.project_slug}}"
 # Docker image projects (map of images)
 #
 # {image_name}:
+#   project: relative_directory to docker directory (defaults to key)
 #   remote: (https://|git@)example.com(/|:)project.git
 #   reference: (branch|tag)
 #   docker_dir: relative_path/to/dockerfile
@@ -19,6 +20,7 @@ docker:
 # Helm chart projects (map of charts)
 #
 # {chart_name}:
+#   project: relative_directory to charts directory (defaults to key)
 #   app: argocd_app_name (name field in info.yml)
 #   remote: (https://|git@)example.com(/|:)project.git
 #   reference: (branch|tag)
