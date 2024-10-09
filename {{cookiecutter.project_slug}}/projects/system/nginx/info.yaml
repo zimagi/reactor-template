@@ -1,4 +1,4 @@
-enabled: true
+enabled: ["all"]
 
 name: nginx
 repository: "https://charts.bitnami.com/bitnami"

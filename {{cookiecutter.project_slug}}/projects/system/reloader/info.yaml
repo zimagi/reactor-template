@@ -1,4 +1,4 @@
-enabled: true
+enabled: ["all"]
 
 name: reloader
 repository: "https://stakater.github.io/stakater-charts"

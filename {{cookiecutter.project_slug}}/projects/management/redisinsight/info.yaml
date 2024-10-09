@@ -1,6 +1,4 @@
-enabled: true
+enabled: ["all"]
 
 name: redisinsight
 chart: application
-namespace: zimagi
-namespace_exists: true
