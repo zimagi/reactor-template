@@ -13,7 +13,7 @@ ubuntu_arm64: &ubuntu_arm64
 install_reactor: &install_reactor
     name: Install reactor framework
     command: |
-        git clone https://github.com/zimagi/reactor.git /tmp/reactor
+        git clone https://github.com/kube-reactor/core.git /tmp/reactor
         echo 'export PATH=/tmp/reactor/scripts:${PATH}' >> $BASH_ENV
 
 bootstrap: &bootstrap
