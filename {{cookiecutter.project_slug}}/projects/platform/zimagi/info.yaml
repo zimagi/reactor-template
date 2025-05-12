@@ -1,7 +1,7 @@
 enabled: ["all"]
 
 name: zimagi
-repository: https://charts.zimagi.com
+repository: "https://charts.zimagi.com"
 chart: zimagi
 version: 2.5.46
 

@@ -1,104 +1,196 @@
 postgresql:
   primary:
+    nodeSelector:
+      node-role: database
     resources:
       requests:
         cpu: 250m
         memory: 512Mi
       limits:
         cpu: 1
-        memory: 1024Mi
+        memory: 1Gi
     persistence:
       existingClaim: postgresql
 
 redis:
   master:
+    nodeSelector:
+      node-role: database
     resources:
       requests:
         cpu: 250m
         memory: 512Mi
       limits:
         cpu: 1
-        memory: 1024Mi
+        memory: 1Gi
     persistence:
       existingClaim: redis
 
 image:
-  pullPolicy: Never
-  repository: ""
-  image: zimagi
-  tag: dev
+  pullPolicy: IfNotPresent
+  repository: "docker.io"
+  image: zimagi/zimagi
+  tag: "${ZIMAGI_PROD_TAG}"
 
 pvc:
   claims:
-    files: null
     postgresql:
-      storageClass: standard
+      backup: true
+      storageClass: longhorn
       accessMode: ReadWriteOnce
-      size: 10Gi
+      size: 50Gi
     redis:
-      storageClass: standard
+      storageClass: longhorn
       accessMode: ReadWriteOnce
-      size: 10Gi
-
-volumes:
-  host:
-    /usr/local/share/zimagi:
-      name: app-source
-      path: "${__zimagi_app_dir}"
-    /usr/local/lib/zimagi:
-      name: app-lib
-      path: "${__zimagi_lib_dir}"
+      size: 50Gi
+    files:
+      backup: true
+      storageClass: longhorn
+      accessMode: ReadWriteMany
+      size: 30Gi
 
 deployment:
-  replicaCount: 1
+  revisionHistoryLimit: 1
 
   env:
     ZIMAGI_DEFAULT_RUNTIME_IMAGE: "{{ .Values.image.image }}:{{ .Values.image.tag }}"
 
-ingress:
-  className: nginx
-  tls:
-    - secretName: origin-cert
+    POSTGRES_HOST: "{{ .Values.postgresql.fullnameOverride }}"
+    POSTGRES_PORT: 5432
+    POSTGRES_DB: "{{ .Values.postgresql.auth.database }}"
+    POSTGRES_USER: "{{ .Values.postgresql.auth.username }}"
+    REDIS_HOST: "{{ .Values.redis.fullnameOverride }}-master"
+    REDIS_PORT: 6379
 
 services:
   command-api:
+    deployment:
+      replicaCount: 1
+      nodeSelector:
+        node-role: api
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "256Mi"
+
     annotations:
       configmap.reloader.stakater.com/reload: global,command-api
       secret.reloader.stakater.com/reload: global
-    pvc:
-      mounts: null
+      cert-manager.io/cluster-issuer: cert-issuer
+      nginx.ingress.kubernetes.io/proxy-body-size: 0
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: 30
+      nginx.ingress.kubernetes.io/proxy-read-timeout: 1800
+      nginx.ingress.kubernetes.io/proxy-send-timeout: 1800
+
     ingress:
       enabled: true
+      className: nginx-ui
       hosts:
-        - host: "zimagi-cmd.${PRIMARY_DOMAIN}"
+        - host: "cmd.${ZIMAGI_DOMAIN}"
+      tls:
+        - secretName: command-cert
+
+  mcp-api:
+    deployment:
+      replicaCount: 1
+      nodeSelector:
+        node-role: api
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "256Mi"
+
+    annotations:
+      configmap.reloader.stakater.com/reload: global,mcp-api
+      secret.reloader.stakater.com/reload: global
+      cert-manager.io/cluster-issuer: cert-issuer
+      nginx.ingress.kubernetes.io/proxy-body-size: 0
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: 30
+      nginx.ingress.kubernetes.io/proxy-read-timeout: 1800
+      nginx.ingress.kubernetes.io/proxy-send-timeout: 1800
+
+    ingress:
+      enabled: true
+      className: nginx-ui
+      hosts:
+        - host: "mcp.${ZIMAGI_DOMAIN}"
+      tls:
+        - secretName: mcp-cert
 
   data-api:
+    deployment:
+      replicaCount: 1
+      nodeSelector:
+        node-role: api
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "256Mi"
+
     annotations:
       configmap.reloader.stakater.com/reload: global,data-api
       secret.reloader.stakater.com/reload: global
-    pvc:
-      mounts: null
+      cert-manager.io/cluster-issuer: cert-issuer
+      nginx.ingress.kubernetes.io/proxy-body-size: 0
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: 30
+      nginx.ingress.kubernetes.io/proxy-read-timeout: 1800
+      nginx.ingress.kubernetes.io/proxy-send-timeout: 1800
+
     ingress:
       enabled: true
+      className: nginx-ui
       hosts:
-        - host: "zimagi-api.${PRIMARY_DOMAIN}"
+        - host: "data.${ZIMAGI_DOMAIN}"
+      tls:
+        - secretName: data-cert
 
   scheduler:
+    deployment:
+      replicaCount: 1
+      nodeSelector:
+        node-role: system
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "100Mi"
+
     annotations:
       configmap.reloader.stakater.com/reload: global,scheduler
       secret.reloader.stakater.com/reload: global
-    pvc:
-      mounts: null
 
   controller:
+    deployment:
+      replicaCount: 1
+      nodeSelector:
+        node-role: system
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "100Mi"
+
     annotations:
       configmap.reloader.stakater.com/reload: global,controller
       secret.reloader.stakater.com/reload: global
-    pvc:
-      mounts: null
 
   tasks:
+    deployment:
+      replicaCount: 1
+      nodeSelector:
+        node-role: ops
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "250Mi"
+
     ingress:
       enabled: true
+      className: nginx-ui
       hosts:
-        - host: "zimagi-tasks.${PRIMARY_DOMAIN}"
+        - host: "tasks.${ZIMAGI_DOMAIN}"
+      tls:
+        - secretName: tasks-cert
+
+    annotations:
+      cert-manager.io/cluster-issuer: cert-issuer
+      nginx.ingress.kubernetes.io/auth-url: "https://${AUTH_DOMAIN}/oauth2/auth?allowed_emails=${oauth_access_groups.tasks}"
+      nginx.ingress.kubernetes.io/auth-signin: "https://${AUTH_DOMAIN}/oauth2/start"

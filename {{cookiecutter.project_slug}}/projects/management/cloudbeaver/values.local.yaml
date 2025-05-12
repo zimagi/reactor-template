@@ -16,10 +16,7 @@ deployment:
   updateStrategy:
     type: Recreate
 
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "100Mi"
+  resources: {}
 
   port: 8978
 

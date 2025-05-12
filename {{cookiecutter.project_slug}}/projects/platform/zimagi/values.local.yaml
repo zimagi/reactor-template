@@ -1,0 +1,107 @@
+postgresql:
+  primary:
+    persistence:
+      existingClaim: postgresql
+    resources: {}
+
+redis:
+  master:
+    persistence:
+      existingClaim: redis
+    resources: {}
+
+image:
+  pullPolicy: Never
+  repository: ""
+  image: zimagi
+  tag: dev
+
+pvc:
+  claims:
+    files: null
+    postgresql:
+      storageClass: standard
+      accessMode: ReadWriteOnce
+      size: 10Gi
+    redis:
+      storageClass: standard
+      accessMode: ReadWriteOnce
+      size: 10Gi
+
+volumes:
+  host:
+    /usr/local/share/zimagi:
+      name: app-source
+      path: "${__zimagi_app_dir}"
+    /usr/local/lib/zimagi:
+      name: app-lib
+      path: "${__zimagi_lib_dir}"
+
+deployment:
+  replicaCount: 1
+
+  env:
+    GIT_SSL_NO_VERIFY: true
+
+    ZIMAGI_DEBUG: true
+    ZIMAGI_DEBUG_COMMAND_PROFILES: true
+
+    ZIMAGI_DEFAULT_RUNTIME_IMAGE: "{{ .Values.image.image }}:{{ .Values.image.tag }}"
+
+ingress:
+  className: nginx
+  tls:
+    - secretName: origin-cert
+
+services:
+  command-api:
+    annotations:
+      configmap.reloader.stakater.com/reload: global,command-api
+      secret.reloader.stakater.com/reload: global
+    deployment:
+      resources: null
+    pvc:
+      mounts: null
+    ingress:
+      enabled: true
+      hosts:
+        - host: "cmd.${ZIMAGI_DOMAIN}"
+
+  data-api:
+    annotations:
+      configmap.reloader.stakater.com/reload: global,data-api
+      secret.reloader.stakater.com/reload: global
+    deployment:
+      resources: null
+    pvc:
+      mounts: null
+    ingress:
+      enabled: true
+      hosts:
+        - host: "data.${ZIMAGI_DOMAIN}"
+
+  scheduler:
+    annotations:
+      configmap.reloader.stakater.com/reload: global,scheduler
+      secret.reloader.stakater.com/reload: global
+    deployment:
+      resources: null
+    pvc:
+      mounts: null
+
+  controller:
+    annotations:
+      configmap.reloader.stakater.com/reload: global,controller
+      secret.reloader.stakater.com/reload: global
+    deployment:
+      resources: null
+    pvc:
+      mounts: null
+
+  tasks:
+    deployment:
+      resources: null
+    ingress:
+      enabled: true
+      hosts:
+        - host: "tasks.${ZIMAGI_DOMAIN}"

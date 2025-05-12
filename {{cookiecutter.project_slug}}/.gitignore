@@ -16,12 +16,14 @@
 
 # Terraform files
 /.terraform/
+/env/*/.terraform/
 /terraform/argocd-apps/
 
 # Project files
 /env/*/.initialized
 /env/*/.kubeconfig
 /env/*/secret.sh
+/env/*/*.json
 /certs/
 /extensions/
 /docker/

@@ -1,0 +1,46 @@
+#
+# ArtifactHub: https://artifacthub.io/packages/helm/argo/argo-cd
+# GitHub: https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+# Default Values: https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
+#
+configs:
+  cm:
+    create: false
+  secret:
+    createSecret: false
+
+  params:
+    server.insecure: true
+
+global:
+  domain: "${ARGOCD_DOMAIN}"
+
+redis:
+  resources: {}
+
+controller:
+  resources: {}
+
+dex:
+  resources: {}
+
+server:
+  resources: {}
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - "${ARGOCD_DOMAIN}"
+    paths:
+      - /
+    tls:
+      - secretName: origin-cert
+        hosts:
+          - "${ARGOCD_DOMAIN}"
+
+repoServer:
+  resources: {}
+
+applicationSet:
+  resources: {}

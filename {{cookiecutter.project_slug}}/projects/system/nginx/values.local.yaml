@@ -16,19 +16,7 @@ ingressClassResource:
   name: nginx
   controllerClass: "k8s.io/ingress-nginx-ui"
 
-resources:
-  requests:
-    cpu: "100m"
-    memory: "128Mi"
-  limits:
-    cpu: "150m"
-    memory: "192Mi"
+resources: {}
 
 defaultBackend:
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "128Mi"
-    limits:
-      cpu: "150m"
-      memory: "192Mi"
+  resources: {}

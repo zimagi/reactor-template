@@ -1,3 +1,8 @@
+#
+# ArtifactHub: https://artifacthub.io/packages/helm/argo/argo-cd
+# GitHub: https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+# Default Values: https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
+#
 configs:
   cm:
     create: false
@@ -8,17 +13,92 @@ configs:
     server.insecure: true
 
 global:
-  domain: "argocd.${PRIMARY_DOMAIN}"
+  domain: "${ARGOCD_DOMAIN}"
+
+nodeSelector:
+  node-role: ops
+
+redis:
+  nodeSelector:
+    node-role: ops
+
+  resources:
+    limits:
+      cpu: 128m
+      memory: 128Mi
+    requests:
+      cpu: 64m
+      memory: 64Mi
+controller:
+  nodeSelector:
+    node-role: ops
+
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 128m
+      memory: 256Mi
+
+dex:
+  nodeSelector:
+    node-role: ops
+
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 64m
+      memory: 64Mi
 
 server:
+  nodeSelector:
+    node-role: ops
+
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 64m
+      memory: 64Mi
+
   ingress:
     enabled: true
     ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: nginx-ssl
     hosts:
-      - "argocd.${PRIMARY_DOMAIN}"
+      - "${ARGOCD_DOMAIN}"
     paths:
       - /
     tls:
-      - secretName: origin-cert
+      - secretName: argocd-tls
         hosts:
-          - "argocd.${PRIMARY_DOMAIN}"
+          - "${ARGOCD_DOMAIN}"
+
+repoServer:
+  nodeSelector:
+    node-role: ops
+
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 128m
+      memory: 64Mi
+
+applicationSet:
+  nodeSelector:
+    node-role: ops
+
+  resources:
+    limits:
+      cpu: 128m
+      memory: 128Mi
+    requests:
+      cpu: 64m
+      memory: 64Mi

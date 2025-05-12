@@ -1,5 +1,7 @@
 name: "{{cookiecutter.project_name}}"
 short_name: "{{cookiecutter.project_slug}}"
+domain:
+  local: '{{cookiecutter.local_domain}}'
 #
 # Docker image projects (map of images)
 #
@@ -15,6 +17,12 @@ docker:
     remote: https://github.com/zimagi/zimagi.git
     reference: reactor
     docker_dir: docker
+    docker_tag: dev
+
+  command:
+    remote: https://github.com/zimagi/command.git
+    reference: main
+    docker_dir: .
     docker_tag: dev
 #
 # Helm chart projects (map of charts)
