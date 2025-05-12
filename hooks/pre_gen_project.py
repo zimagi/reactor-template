@@ -1,11 +1,8 @@
 """
 NOTE:
-    the below code maintains the Base Reactor Cluster
-    CookieCutter Django project initialization
+    The below Cookiecutter hook maintains a Reactor based CookieCutter project initialization
 
-    * It sets local environment variables
-    * It managed the OS license and community files
-
+    * It validates Cookiecutter input and makes any updates to variables needed
 """
 
 TERMINATOR = "\x1b[0m"
@@ -18,11 +15,19 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 # It updates the cookiecutter context to trim leading and trailing spaces
 # from values
 """
-{{ cookiecutter.update({ "ingress_node_port": cookiecutter.ingress_node_port | trim }) }}
+{% for variable, value in cookiecutter.items() %}
+  {% if value is string %}
+    {{ cookiecutter.update({ variable: value | trim }) }}
+  {% endif %}
+{% endfor %}
 """
 
 project_slug = "{{ cookiecutter.project_slug }}"
 if hasattr(project_slug, "isidentifier"):
-    assert project_slug.isidentifier(), "'{}' project slug is not a valid Python identifier.".format(project_slug)
+    assert (
+        project_slug.isidentifier()
+    ), "'{}' project slug is not a valid Python identifier.".format(project_slug)
 
-assert project_slug == project_slug.lower(), "'{}' project slug should be all lowercase".format(project_slug)
+assert (
+    project_slug == project_slug.lower()
+), "'{}' project slug should be all lowercase".format(project_slug)
