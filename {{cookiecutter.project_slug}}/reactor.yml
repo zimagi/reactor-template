@@ -10,6 +10,7 @@ domain:
 #   remote: (https://|git@)example.com(/|:)project.git
 #   reference: (branch|tag)
 #   docker_dir: relative_path/to/dockerfile
+#   docker_file: Dockerfile
 #   docker_tag: docker_build_tag
 #
 docker:
@@ -17,6 +18,13 @@ docker:
     remote: https://github.com/zimagi/zimagi.git
     reference: reactor
     docker_dir: docker
+    docker_file: Dockerfile.server
+    docker_tag: dev
+
+  zimagi_client:
+    project: zimagi
+    docker_dir: docker
+    docker_file: Dockerfile.client
     docker_tag: dev
 
   command:
