@@ -43,10 +43,7 @@ deployment:
   env:
     GIT_SSL_NO_VERIFY: true
 
-    ZIMAGI_DEBUG: true
-    ZIMAGI_DEBUG_COMMAND_PROFILES: true
-
-    ZIMAGI_DEFAULT_RUNTIME_IMAGE: "{{ .Values.image.image }}:{{ .Values.image.tag }}"
+    ZIMAGI_DEFAULT_RUNTIME_IMAGE: "zimagi_nvidia:dev"
 
 ingress:
   className: nginx
@@ -55,6 +52,11 @@ ingress:
 
 services:
   command-api:
+    image:
+      pullPolicy: Never
+      repository: ""
+      image: zimagi_nvidia
+      tag: dev
     annotations:
       configmap.reloader.stakater.com/reload: global,command-api
       secret.reloader.stakater.com/reload: global

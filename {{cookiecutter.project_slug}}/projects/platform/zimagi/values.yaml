@@ -29,7 +29,7 @@ redis:
 image:
   pullPolicy: IfNotPresent
   repository: "docker.io"
-  image: zimagi/zimagi
+  image: zimagi/server
   tag: "${ZIMAGI_PROD_TAG}"
 
 pvc:
@@ -53,7 +53,7 @@ deployment:
   revisionHistoryLimit: 1
 
   env:
-    ZIMAGI_DEFAULT_RUNTIME_IMAGE: "{{ .Values.image.image }}:{{ .Values.image.tag }}"
+    ZIMAGI_DEFAULT_RUNTIME_IMAGE: "zimagi/server-nvidia:{{ .Values.image.tag }}"
 
     POSTGRES_HOST: "{{ .Values.postgresql.fullnameOverride }}"
     POSTGRES_PORT: 5432
@@ -64,6 +64,9 @@ deployment:
 
 services:
   command-api:
+    image:
+      image: zimagi/server-nvidia
+
     deployment:
       replicaCount: 1
       nodeSelector:
@@ -89,33 +92,6 @@ services:
         - host: "cmd.${ZIMAGI_DOMAIN}"
       tls:
         - secretName: command-cert
-
-  mcp-api:
-    deployment:
-      replicaCount: 1
-      nodeSelector:
-        node-role: api
-      resources:
-        requests:
-          cpu: "50m"
-          memory: "256Mi"
-
-    annotations:
-      configmap.reloader.stakater.com/reload: global,mcp-api
-      secret.reloader.stakater.com/reload: global
-      cert-manager.io/cluster-issuer: cert-issuer
-      nginx.ingress.kubernetes.io/proxy-body-size: 0
-      nginx.ingress.kubernetes.io/proxy-connect-timeout: 30
-      nginx.ingress.kubernetes.io/proxy-read-timeout: 1800
-      nginx.ingress.kubernetes.io/proxy-send-timeout: 1800
-
-    ingress:
-      enabled: true
-      className: nginx-ui
-      hosts:
-        - host: "mcp.${ZIMAGI_DOMAIN}"
-      tls:
-        - secretName: mcp-cert
 
   data-api:
     deployment:
