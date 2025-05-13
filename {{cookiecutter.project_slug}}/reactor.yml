@@ -12,6 +12,7 @@ domain:
 #   docker_dir: relative_path/to/dockerfile
 #   docker_file: Dockerfile
 #   docker_tag: docker_build_tag
+#   docker_args: relative_path/to/build.script (build_image.sh)
 #
 docker:
   zimagi:
@@ -20,12 +21,21 @@ docker:
     docker_dir: docker
     docker_file: Dockerfile.server
     docker_tag: dev
+    docker_args: build/server
+
+  zimagi_nvidia:
+    project: zimagi
+    docker_dir: docker
+    docker_file: Dockerfile.server
+    docker_tag: dev
+    docker_args: build/server.nvidia
 
   zimagi_client:
     project: zimagi
     docker_dir: docker
     docker_file: Dockerfile.client
     docker_tag: dev
+    docker_args: build/client
 
   command:
     remote: https://github.com/zimagi/command.git
