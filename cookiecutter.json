@@ -14,7 +14,7 @@
   "github_org": "",
   "github_token": "",
   "grafana_admin_user": "admin",
-  "minikube_memory": 10240,
+  "minikube_memory": 5120,
   "gateway_node_port": 32222,
   "dev_secret": 999999999,
   "dev_password": 123456789,
