@@ -33,7 +33,7 @@ docker:
   zimagi_client:
     project: zimagi
     docker_dir: docker
-    docker_file: Dockerfile.client
+    docker_file: Dockerfile.cli
     docker_tag: dev
     docker_args: build/client
 
